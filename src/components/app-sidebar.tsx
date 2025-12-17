@@ -1,4 +1,6 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { ChevronRight } from "lucide-react"
+import { useId } from "react"
+import { Collection, TreeItemContent } from "react-aria-components"
 
 import {
   Sidebar,
@@ -7,56 +9,80 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { Button } from "./ui/button"
+import { SearchField } from "./ui/SearchField"
+import { Tree, TreeItem } from "./ui/Tree"
 
-const items = [
+const albums = [
   {
-    title: "Home",
-    url: "#",
-    icon: Home,
+    id: "favorites",
+    name: "Favorites",
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
+    id: "nature",
+    name: "Nature",
+    children: [
+      { id: "nature-landscapes", name: "Landscapes" },
+      { id: "nature-mountains", name: "Mountains" },
+      { id: "nature-forests", name: "Forests" },
+      { id: "nature-beaches", name: "Beaches" },
+      { id: "nature-sunsets", name: "Sunsets" },
+      { id: "nature-weather", name: "Weather & Skies" },
+    ],
   },
 ]
 
 export function AppSidebar() {
+  const id = useId()
+
+  const renderAlbum = (album: Album) => (
+    <TreeItem textValue={album.name} className='sidebar-TreeItem'>
+      <TreeItemContent>
+        {album.children && (
+          <Button slot='chevron' className='chevron'>
+            <ChevronRight size={16} />
+          </Button>
+        )}
+        <span>{album.name}</span>
+      </TreeItemContent>
+      {album.children && (
+        <Collection items={album.children}>{renderAlbum}</Collection>
+      )}
+    </TreeItem>
+  )
+
   return (
     <Sidebar className='mt-18'>
       <SidebarContent className='bg-gray-50'>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SearchField />
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <Tree
+                aria-label='Files'
+                selectionMode='single'
+                disallowEmptySelection
+                selectionBehavior='replace'
+                // selectedKeys={[selectedAlbum]}
+                // onSelectionChange={(keys) =>
+                //   onSelectionChange([...keys][0] as string)
+                // }
+                // dragAndDropHooks={dragAndDropHooks}
+                className='sidebar-Tree'
+              >
+                <TreeItem
+                  id={id}
+                  textValue='All Photos'
+                  className='sidebar-TreeItem'
+                >
+                  <TreeItemContent>All Photos</TreeItemContent>
+                </TreeItem>
+                <Collection items={albums}>{renderAlbum}</Collection>
+              </Tree>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

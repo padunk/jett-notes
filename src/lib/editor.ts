@@ -12,6 +12,7 @@ export function createEditor(
 		 * Id of Element that should contain the Editor
 		 */
 		holder: holderRef.current,
+		autofocus: true,
 
 		/**
 		 * Available Tools list.
