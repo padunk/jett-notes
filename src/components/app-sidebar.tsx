@@ -1,7 +1,12 @@
 import { ChevronRight } from "lucide-react"
 import { useId } from "react"
-import { Collection, TreeItemContent } from "react-aria-components"
-
+import {
+  Button,
+  Collection,
+  Tree,
+  TreeItem,
+  TreeItemContent,
+} from "react-aria-components"
 import {
   Sidebar,
   SidebarContent,
@@ -10,9 +15,7 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
 } from "@/components/ui/sidebar"
-import { Button } from "./ui/button"
 import { SearchField } from "./ui/SearchField"
-import { Tree, TreeItem } from "./ui/Tree"
 
 const albums = [
   {
@@ -36,7 +39,7 @@ const albums = [
 export function AppSidebar() {
   const id = useId()
 
-  const renderAlbum = (album: Album) => (
+  const renderAlbum = (album: any) => (
     <TreeItem textValue={album.name} className='sidebar-TreeItem'>
       <TreeItemContent>
         {album.children && (
